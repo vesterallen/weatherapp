@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="93dp">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"
+            android:layout_marginStart="55dp"
+            android:text="TextView"
+            android:layout_below="@+id/weatherText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/weatherText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="90dp"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="12dp"
+            android:layout_toEndOf="@+id/textView3"
+            android:layout_toRightOf="@+id/textView3"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/weatherText"
+            android:layout_alignStart="@+id/weatherText"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="17dp"
+            android:text="TextView"
+            android:layout_alignRight="@+id/weatherText"
+            android:layout_alignEnd="@+id/weatherText" />
+
+        <ImageView
+            android:id="@+id/favouriteCityIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_marginEnd="22dp"
+            android:layout_marginRight="22dp"
+            app:srcCompat="@android:drawable/screen_background_light_transparent" />
+
+    </RelativeLayout>
+</LinearLayout>

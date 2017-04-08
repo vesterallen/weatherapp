@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="2dp" />
 
     <Button
         android:id="@+id/setCurrentCity"
@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:layout_marginTop="13dp"
         android:layout_below="@+id/updatedTime"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -48,57 +49,74 @@
         android:id="@+id/searchCity"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/setCurrentCity"
-        android:layout_alignStart="@+id/setCurrentCity"
-        android:layout_below="@+id/countryName"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="125dp"
+        android:layout_marginTop="330dp"
         android:text="Search City" />
 
     <RelativeLayout
         android:id="@+id/relLayoutForSavedCities"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="350dp">
+        android:layout_marginTop="380dp">
+
+        <TextView
+            android:id="@+id/noCities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:layout_marginTop="40dp" />
+
+        <TextView
+            android:id="@+id/searchAndSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:layout_marginTop="60dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/weatherText"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/currentCity"
-        android:layout_marginLeft="190dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="10dp"
+        android:layout_alignRight="@+id/weatherIcon"
+        android:layout_alignEnd="@+id/weatherIcon"
+        android:layout_alignLeft="@+id/weatherIcon"
+        android:layout_alignStart="@+id/weatherIcon" />
 
     <ImageView
         android:id="@+id/weatherIcon"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignTop="@+id/setCurrentCity"
+        android:layout_alignTop="@+id/weatherText"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
         app:srcCompat="@android:drawable/screen_background_light_transparent" />
 
     <TextView
         android:id="@+id/temperature"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/weatherIcon"
-        android:layout_marginLeft="190dp" />
+        android:layout_alignLeft="@+id/updatedTime"
+        android:layout_alignStart="@+id/updatedTime"
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/updatedTime"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/temperature"
-        android:layout_alignStart="@+id/temperature"
+        android:layout_marginTop="13dp"
         android:layout_below="@+id/temperature"
-        android:layout_marginTop="10dp" />
+        android:layout_alignLeft="@+id/weatherIcon"
+        android:layout_alignStart="@+id/weatherIcon" />
 
 </RelativeLayout>

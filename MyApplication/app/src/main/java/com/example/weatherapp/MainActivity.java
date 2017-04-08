@@ -18,12 +18,12 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity implements LoadCityDetails.LoadingCityDetails, LoadWeatherDetails.LoadingWeatherDetails{
+public class MainActivity extends AppCompatActivity implements LoadCityDetails.LoadingCityDetails, LoadWeatherDetails.LoadingWeatherDetails {
     City city;
-    public static String CITY_DETAILS_URL="http://dataservice.accuweather.com/locations/v1/US/search?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu&q=";
-    public static String ICON_URL="http://developer.accuweather.com/sites/default/files/0";
-    public static String CITY_WEATHER_DETAILS="http://dataservice.accuweather.com/currentconditions/v1/";
-    public static String API_KEY="?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu";
+    public static String CITY_DETAILS_URL = "http://dataservice.accuweather.com/locations/v1/US/search?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu&q=";
+    public static String ICON_URL = "http://developer.accuweather.com/sites/default/files/0";
+    public static String CITY_WEATHER_DETAILS = "http://dataservice.accuweather.com/currentconditions/v1/";
+    public static String API_KEY = "?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu";
     TextView currentCity;
     Button setCurrentCity;
     Button searchCity;
@@ -40,32 +40,39 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     TextView weatherText;
     TextView temperature;
     TextView updatedTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        weatherIcon= (ImageView) findViewById(R.id.weatherIcon);
-        weatherText= (TextView) findViewById(R.id.weatherText);
-        temperature= (TextView) findViewById(R.id.temperature);
-        updatedTime= (TextView) findViewById(R.id.updatedTime);
-        currentCity= (TextView) findViewById(R.id.currentCity);
-        setCurrentCity= (Button) findViewById(R.id.setCurrentCity);
-        searchCity= (Button) findViewById(R.id.searchCity);
-        cityName= (EditText) findViewById(R.id.cityName);
-        countryName= (EditText) findViewById(R.id.countryName);
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
-        relativeLayout= (RelativeLayout) findViewById(R.id.relLayoutForSavedCities);
-        noCities=new TextView(this);
-        alertDialog=new AlertDialog.Builder(this);
+        weatherIcon = (ImageView) findViewById(R.id.weatherIcon);
+        weatherText = (TextView) findViewById(R.id.weatherText);
+        temperature = (TextView) findViewById(R.id.temperature);
+        updatedTime = (TextView) findViewById(R.id.updatedTime);
+        currentCity = (TextView) findViewById(R.id.currentCity);
+        setCurrentCity = (Button) findViewById(R.id.setCurrentCity);
+        searchCity = (Button) findViewById(R.id.searchCity);
+        cityName = (EditText) findViewById(R.id.cityName);
+        countryName = (EditText) findViewById(R.id.countryName);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relLayoutForSavedCities);
+        noCities = new TextView(this);
+        alertDialog = new AlertDialog.Builder(this);
+        searchCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         setCurrentCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.setTitle("Enter City Details");
-                alertCity=new EditText(MainActivity.this);
-                alertCountry=new EditText(MainActivity.this);
-                LinearLayout ll=new LinearLayout(MainActivity.this);
+                alertCity = new EditText(MainActivity.this);
+                alertCountry = new EditText(MainActivity.this);
+                LinearLayout ll = new LinearLayout(MainActivity.this);
                 ll.setOrientation(LinearLayout.VERTICAL);
-                LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
                 ll.setLayoutParams(layoutParams);
                 alertCity.setLayoutParams(layoutParams);
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
                 alertDialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CITY_DETAILS_URL+=alertCity.getText().toString().trim();
+                        CITY_DETAILS_URL += alertCity.getText().toString().trim();
                         new LoadCityDetails(MainActivity.this, MainActivity.this).execute(CITY_DETAILS_URL);
                     }
                 });
@@ -95,22 +102,22 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
 
     @Override
     public void getSelectedCityWeather(City city) {
-        this.city=new City();
+        this.city = new City();
         this.city = city;
-        ICON_URL+=this.city.getCityWeatherIcon()+"-s.png";
+        ICON_URL += this.city.getCityWeatherIcon() + "-s.png";
         Picasso.with(this).load(ICON_URL).into(weatherIcon);
-        currentCity.setText(city.getCityName()+"\n"+city.getCityCountry());
-        temperature.setText("Temperature : "+city.getCityTempInC());
+        currentCity.setText(city.getCityName() + ", " + city.getCityCountry());
+        temperature.setText("Temperature : " + city.getCityTempInC());
         updatedTime.setText(city.getCityTempTime());
         weatherText.setText(city.getCityWeatherText());
-        Log.d("In weather completion",ICON_URL);
+        Log.d("In weather completion", ICON_URL);
     }
 
     @Override
     public void getSelectedCity(City city) {
         setCurrentCity.setVisibility(View.GONE);
-        CITY_WEATHER_DETAILS+=city.getCityKey()+API_KEY;
-        Log.d("In weather1 completion",CITY_WEATHER_DETAILS);
+        CITY_WEATHER_DETAILS += city.getCityKey() + API_KEY;
+        Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
         new LoadWeatherDetails(this, this, city).execute(CITY_WEATHER_DETAILS);
 
     }

@@ -149,6 +149,5 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         String s = ref.getKey();
         city.setCityId(s);
         ref.setValue(city);
-        mDatabase.addChildEventListener()
     }
 }

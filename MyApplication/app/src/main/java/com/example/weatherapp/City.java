@@ -1,10 +1,16 @@
 package com.example.weatherapp;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Allen on 4/8/17.
  */
 
 public class City {
+    public String cityId;
     public String cityKey;
     public String cityName;
     public String cityCountry;
@@ -109,5 +115,36 @@ public class City {
                 ", cityTempInF='" + cityTempInF + '\'' +
                 ", cityTempInC='" + cityTempInC + '\'' +
                 '}';
+    }
+
+    public City() {
+    }
+
+    public City(String cityKey, String cityName, String cityCountry, String cityFav) {
+
+        this.cityKey = cityKey;
+        this.cityName = cityName;
+        this.cityCountry = cityCountry;
+        this.cityFav = cityFav;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("cityKey",  cityKey );
+        result.put("cityCountry", cityCountry);
+        result.put("cityName", cityName);
+        result.put("cityFav", cityFav);
+
+
+        return result;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 }

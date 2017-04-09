@@ -23,7 +23,7 @@ public class LoadCityDetails extends AsyncTask<String, Void, City> {
     City city;
     LoadingCityDetails loadingCity;
     Context context;
-    ProgressDialog progressDialog;
+    MainActivity mainActivity;
     public LoadCityDetails(LoadingCityDetails loadingCity, Context context) {
         this.loadingCity= loadingCity;
         this.context=context;
@@ -33,15 +33,15 @@ public class LoadCityDetails extends AsyncTask<String, Void, City> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog=new ProgressDialog(context);
-        progressDialog.show();
+        mainActivity=(MainActivity)context;
+        mainActivity.progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(City city) {
         super.onPostExecute(city);
         loadingCity.getSelectedCity(city);
-        progressDialog.hide();
+        mainActivity.progressDialog.hide();
     }
 
     @Override

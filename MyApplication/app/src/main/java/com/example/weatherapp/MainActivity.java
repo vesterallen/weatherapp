@@ -1,5 +1,6 @@
 package com.example.weatherapp;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,16 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements LoadCityDetails.LoadingCityDetails, LoadWeatherDetails.LoadingWeatherDetails {
     City city;
-    public static String CITY_DETAILS_URL = "http://dataservice.accuweather.com/locations/v1/US/search?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu&q=";
-    public static String ICON_URL = "http://developer.accuweather.com/sites/default/files/0";
-    public static String CITY_WEATHER_DETAILS = "http://dataservice.accuweather.com/currentconditions/v1/";
-    public static String API_KEY = "?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu";
+    Boolean search;
+
+    public static final String CITY_DETAILS_URL = "http://dataservice.accuweather.com/locations/v1/";
+    public static final String ICON_URL = "http://developer.accuweather.com/sites/default/files/0";
+    public static final String CITY_WEATHER_DETAILS = "http://dataservice.accuweather.com/currentconditions/v1/";
+    public static final String API_KEY = "?apikey=HMdbWP43lBiXRFh96hJ8ljfSymkWjltu";
+
     TextView currentCity;
     Button setCurrentCity;
     Button searchCity;
@@ -35,16 +39,21 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     AlertDialog.Builder alertDialog;
     EditText alertCity;
     EditText alertCountry;
-    String fromMethod;
     ImageView weatherIcon;
     TextView weatherText;
     TextView temperature;
     TextView updatedTime;
+    ProgressDialog progressDialog;
+
+    private DatabaseReference mDatabase;
+    private DatabaseReference cities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressDialog = new ProgressDialog(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         weatherIcon = (ImageView) findViewById(R.id.weatherIcon);
         weatherText = (TextView) findViewById(R.id.weatherText);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -61,7 +70,11 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         searchCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                search = true;
+                String url = null;
+                url = CITY_DETAILS_URL + countryName.getText().toString().trim() + "/search" + API_KEY + "&q=" + cityName.getText().toString().trim();
+                Log.d("City", url.trim());
+                new LoadCityDetails(MainActivity.this, MainActivity.this).execute(url.trim());
             }
         });
         setCurrentCity.setOnClickListener(new View.OnClickListener() {
@@ -83,8 +96,10 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
                 alertDialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CITY_DETAILS_URL += alertCity.getText().toString().trim();
-                        new LoadCityDetails(MainActivity.this, MainActivity.this).execute(CITY_DETAILS_URL);
+                        search = false;
+                        String url = null;
+                        url = CITY_DETAILS_URL + alertCountry.getText().toString().trim() + "/search" + API_KEY + "&q=" + alertCity.getText().toString().trim();
+                        new LoadCityDetails(MainActivity.this, MainActivity.this).execute(url.trim());
                     }
                 });
                 alertDialog.setNegativeButton("Cancel",
@@ -102,23 +117,38 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
 
     @Override
     public void getSelectedCityWeather(City city) {
-        this.city = new City();
-        this.city = city;
-        ICON_URL += this.city.getCityWeatherIcon() + "-s.png";
-        Picasso.with(this).load(ICON_URL).into(weatherIcon);
-        currentCity.setText(city.getCityName() + ", " + city.getCityCountry());
-        temperature.setText("Temperature : " + city.getCityTempInC());
-        updatedTime.setText(city.getCityTempTime());
-        weatherText.setText(city.getCityWeatherText());
-        Log.d("In weather completion", ICON_URL);
+        if (search != true) {
+            this.city = new City();
+            this.city = city;
+            String url = null;
+            url = ICON_URL + this.city.getCityWeatherIcon() + "-s.png";
+            Picasso.with(this).load(url.trim()).into(weatherIcon);
+            currentCity.setText(city.getCityName() + ", " + city.getCityCountry());
+            temperature.setText("Temperature : " + city.getCityTempInC());
+            updatedTime.setText(city.getCityTempTime());
+            weatherText.setText(city.getCityWeatherText());
+            Log.d("In weather completion", ICON_URL);
+        } else {
+            submitCity(city);
+        }
     }
 
     @Override
     public void getSelectedCity(City city) {
-        setCurrentCity.setVisibility(View.GONE);
-        CITY_WEATHER_DETAILS += city.getCityKey() + API_KEY;
-        Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
-        new LoadWeatherDetails(this, this, city).execute(CITY_WEATHER_DETAILS);
 
+        setCurrentCity.setVisibility(View.GONE);
+        String url = null;
+        url = CITY_WEATHER_DETAILS + city.getCityKey() + API_KEY;
+        Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
+        new LoadWeatherDetails(this, this, city).execute(url.trim());
+
+    }
+
+    public void submitCity(City city) {
+        DatabaseReference ref = mDatabase.child("cities").push();
+        String s = ref.getKey();
+        city.setCityId(s);
+        ref.setValue(city);
+        mDatabase.addChildEventListener()
     }
 }

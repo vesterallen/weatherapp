@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class CityWeatherActivity extends AppCompatActivity implements GetFiveDaysForeCast.WFDisplay{
     List<WeatherForecasts> weatherForecastses;
@@ -30,6 +31,8 @@ public class CityWeatherActivity extends AppCompatActivity implements GetFiveDay
     private String param2;
     private String country;
     private String city;
+    private String unit;
+    private String cityKey;
     private String encodedLocationURL;
     private TextView tvForeceastCity;
     private TextView tvHeading;
@@ -69,11 +72,10 @@ public class CityWeatherActivity extends AppCompatActivity implements GetFiveDay
 
 
 
-
-
-        Intent weatherIntent = getIntent();
-        country = weatherIntent.getStringExtra("country_code");
-        city = weatherIntent.getStringExtra("city");
+        city=mSettings.getString("cur_city",null);
+        country=mSettings.getString("cur_country",null);
+        cityKey=mSettings.getString("cur_cityKey",null);
+        unit=mSettings.getString("unit",null);
 
         param1 = "apikey"+ "="+API_KEY;
         param2 = "q"+ "=" + "charlotte" ;

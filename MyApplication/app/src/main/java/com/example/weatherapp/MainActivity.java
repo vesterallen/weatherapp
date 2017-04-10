@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LoadCityDetails.LoadingCityDetails, LoadWeatherDetails.LoadingWeatherDetails, CityAdapter.PassFavourite {
     City city;
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         mSettings = this.getSharedPreferences("Settings", Context.MODE_PRIVATE);
         progressDialog = new ProgressDialog(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        ref = mDatabase.child("cities");
         weatherIcon = (ImageView) findViewById(R.id.weatherIcon);
         weatherText = (TextView) findViewById(R.id.weatherText);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -84,19 +88,38 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         noCities = (TextView) findViewById(R.id.noCities);
         searchAndSave = (TextView) findViewById(R.id.searchAndSave);
         alertDialog = new AlertDialog.Builder(this);
-        cities=new ArrayList<>();
-        if(cities.size()!=0) {
-            noCities.setText("");
-            searchAndSave.setText("");
-            adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setAdapter(adaptor);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        }else {
-            noCities.setText("There are no cities to display");
-            searchAndSave.setText("Search the city from the search box and save");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cities=new ArrayList<>();
+                counter=(int)dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshotChild: dataSnapshot.getChildren()){
+                    City city=dataSnapshotChild.getValue(City.class);
+                    Log.d("CityObj",city.toString());
+                    cities.add(city);
+                }
+                Log.d("couny",""+counter);
+                if(counter!=0) {
+                    noCities.setText("");
+                    searchAndSave.setText("");
+                    adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(adaptor);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                }else {
+                    noCities.setGravity(Gravity.CENTER_HORIZONTAL);
+                    searchAndSave.setGravity(Gravity.CENTER_HORIZONTAL);
+                    noCities.setText("There are no cities to display");
+                    searchAndSave.setText("Search the city from the search box and save");
+                }
+            }
 
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         searchCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
                 Log.d("City", url.trim());
                 new LoadCityDetails(MainActivity.this, MainActivity.this).execute(url.trim());
                 Intent i = new Intent(MainActivity.this,CityWeatherActivity.class);
+                i.putExtra("country_code","US");
+                i.putExtra("city","Charlotte");
                 startActivity(i);
             }
         });
@@ -164,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
             editor.putString("cur_country",city.getCityCountry());
             editor.putString("cur_cityKey",city.getCityKey());
             editor.putString("unit","C");
+            editor.putString("counter",String.valueOf(counter));
             editor.commit();
             submitCity(city);
         }
@@ -171,19 +197,20 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
 
     @Override
     public void getSelectedCity(City city) {
-        setCurrentCity.setVisibility(View.GONE);
-        String url = null;
-        url = CITY_WEATHER_DETAILS + city.getCityKey() + API_KEY;
-        Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
-        new LoadWeatherDetails(this, this, city).execute(url.trim());
-
+        if(search != true) {
+            setCurrentCity.setVisibility(View.GONE);
+        }
+            String url = null;
+            url = CITY_WEATHER_DETAILS + city.getCityKey() + API_KEY;
+            Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
+            new LoadWeatherDetails(this, this, city).execute(url.trim());
     }
 
     public ArrayList<City> submitCity(final City city) {
-        ref = mDatabase.child("cities");
-        String s = String.valueOf(counter);
-        cityRef = ref.child(s).push();
+        cityRef = ref.push();
+        String s = cityRef.toString();
         city.setCityId(s);
+        city.setCityFav("notFavourite");
         cityRef.setValue(city);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -207,23 +234,32 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         return cities;
     }
 
-    public ArrayList<City> readCities(final City city) {
-        ref = mDatabase.child("cities");
-        String s = String.valueOf(counter);
-        cityRef = ref.child(s).push();
-        city.setCityId(s);
-        cityRef.setValue(city);
-        ref.addValueEventListener(new ValueEventListener() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Count " ,""+dataSnapshot.getChildrenCount());
-                cities=null;
-                cities=new ArrayList<City>();
-                counter= (int) dataSnapshot.getChildrenCount();
-                for(DataSnapshot dataSnapshotChild: dataSnapshot.getChildren()){
-                    City cityChild=dataSnapshotChild.getValue(City.class);
-                    Log.d("City",counter+city.getCityName());
-                    cities.add(cityChild);
+                cities = new ArrayList<>();
+                counter = (int) dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                    City city = dataSnapshotChild.getValue(City.class);
+                    Log.d("CityObj", city.toString());
+                    cities.add(city);
+                }
+                Log.d("couny", "" + counter);
+                if (counter != 0) {
+                    noCities.setText("");
+                    searchAndSave.setText("");
+                    adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(adaptor);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                } else {
+                    noCities.setGravity(Gravity.CENTER_HORIZONTAL);
+                    searchAndSave.setGravity(Gravity.CENTER_HORIZONTAL);
+                    noCities.setText("There are no cities to display");
+                    searchAndSave.setText("Search the city from the search box and save");
                 }
             }
 
@@ -232,12 +268,17 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
 
             }
         });
-        return cities;
     }
+
     @Override
     public void passFavouriteClickData(City city) {
         if(city.getCityFav().equals("Favourite")){
             city.setCityFav("notFavourite");
+        }else {
+            city.setCityFav("Favourite");
         }
+        Map<String, Object> map=new HashMap<>();
+        map.put(city.getCityId(),city);
+        ref.updateChildren(map);
     }
 }

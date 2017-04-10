@@ -3,6 +3,7 @@ package com.example.weatherapp;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +38,13 @@ public class CityAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final holder h = (holder) holder;
-        final City note = cities.get(position);
-        h.cityName.setText(cities.get(position).getCityName());
-        h.temp.setText(cities.get(position).getCityTempInC());
-        h.weather.setText(cities.get(position).getCityWeatherText());
+        final City city = cities.get(position);
+        Log.d("cit",city.toString());
+        h.cityName.setText(city.getCityName());
+        h.temp.setText(city.getCityTempInC());
+        h.weather.setText(city.getCityWeatherText());
         Drawable myDrawable;
-        if(cities.get(position).getCityWeatherText().equals("favourite")){
+        if(city.getCityFav().equals("notFavourite")){
             myDrawable = context.getResources().getDrawable(R.drawable.stargray);
             h.fav.setImageDrawable(myDrawable);
         }else {

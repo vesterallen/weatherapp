@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +40,14 @@ public class myDayAdapter extends RecyclerView.Adapter<myDayAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         WeatherForecasts wf = wfs.get(position);
         Picasso.with(context).load(wf.getDayImage()).into(holder.ivDay);
+        Format f = new SimpleDateFormat("dd, yyyy");
+        try {
+            Date d1 = new SimpleDateFormat("yyyy-mm-dd").parse(wf.getDate());
+            holder.tvDay.setText(f.format(d1));
+            //tvForeceastCity.setText(f.format(d1));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

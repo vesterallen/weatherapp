@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="LabelCityNotSet">Current City not yet set</string>
+    <string name="ButtonLabelSetCurrentCity">Set Current City</string>
+    <string name="LabelHeadline">Headline</string>
+    <string name="LabelCondition">Condition</string>
+    <string name="LabelDay">Day</string>
+    <string name="LabelNight">Night</string>
+    <string name="LabelMoreDetails">Click here for more details</string>
+    <string name="LabelExtendedForecast">Click here for extended forecast</string>
+    <string name="LabelSettings">Settings</string>
+    <string name="LabelSetCity">Set As Current City</string>
+    <string name="LabelSaveCity">Save City</string>
 </resources>

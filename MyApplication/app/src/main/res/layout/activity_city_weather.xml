@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_city_weather"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.weatherapp.CityWeatherActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textViewDailyForecastCity" />
+
+    <TextView
+        android:text="@string/LabelHeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDailyForecastCity"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textViewHeadlineLabel" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewHeadlineLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textViewHeadline" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewHeadline"
+        android:layout_alignRight="@+id/textViewHeadlineLabel"
+        android:layout_alignEnd="@+id/textViewHeadlineLabel"
+        android:layout_marginTop="22dp"
+        android:id="@+id/textViewForecastLabel" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewForecastLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="19dp"
+        android:id="@+id/textViewTemperature" />
+
+    <TextView
+        android:text="@string/LabelCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTemperature"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textViewCondition" />
+
+    <TextView
+        android:text="@string/LabelDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCondition"
+        android:id="@+id/textViewDayLabel"
+        android:layout_alignLeft="@+id/textViewTemperature"
+        android:layout_alignStart="@+id/textViewTemperature" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCondition"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:id="@+id/textViewNightLabel"
+        android:text="@string/LabelNight" />
+
+    <ImageView
+        android:layout_marginTop="14dp"
+        android:id="@+id/imageViewDay"
+        android:layout_below="@+id/textViewDayLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageViewNight"
+        android:layout_alignTop="@+id/imageViewDay"
+        android:layout_alignRight="@+id/textViewNightLabel"
+        android:layout_alignEnd="@+id/textViewNightLabel" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageViewNight"
+        android:layout_alignLeft="@+id/imageViewNight"
+        android:layout_alignStart="@+id/imageViewNight"
+        android:id="@+id/textViewNightPhrase" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageViewDay"
+        android:layout_alignLeft="@+id/imageViewDay"
+        android:layout_alignStart="@+id/imageViewDay"
+        android:id="@+id/textViewDayPhrase"
+        android:layout_toLeftOf="@+id/textViewCondition"
+        android:layout_toStartOf="@+id/textViewCondition" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textViewSingledayDetails"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="130dp"
+        android:id="@+id/recyclerViewWF" />
+
+    <TextView
+        android:text="@string/LabelExtendedForecast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewExtendedForeCast"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="@string/LabelMoreDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewSingledayDetails"
+        android:layout_below="@+id/textViewNightPhrase"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

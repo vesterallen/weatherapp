@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     City city;
     Boolean search;
     ArrayList<City> cities;
-    int counter=0;
+    int counter = 0;
 
     public static final String CITY_DETAILS_URL = "http://dataservice.accuweather.com/locations/v1/";
     public static final String ICON_URL = "http://developer.accuweather.com/sites/default/files/0";
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     SharedPreferences mSettings;
 
     private DatabaseReference mDatabase;
-    private DatabaseReference ref,cityRef;
+    private DatabaseReference ref, cityRef;
 
 
     @Override
@@ -91,22 +91,22 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                cities=new ArrayList<>();
-                counter=(int)dataSnapshot.getChildrenCount();
-                for (DataSnapshot dataSnapshotChild: dataSnapshot.getChildren()){
-                    City city=dataSnapshotChild.getValue(City.class);
-                    Log.d("CityObj",city.toString());
+                cities = new ArrayList<>();
+                counter = (int) dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                    City city = dataSnapshotChild.getValue(City.class);
+                    Log.d("CityObj", city.toString());
                     cities.add(city);
                 }
-                Log.d("couny",""+counter);
-                if(counter!=0) {
+                Log.d("couny", "" + counter);
+                if (counter != 0) {
                     noCities.setText("");
                     searchAndSave.setText("");
                     adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(adaptor);
                     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                }else {
+                } else {
                     noCities.setGravity(Gravity.CENTER_HORIZONTAL);
                     searchAndSave.setGravity(Gravity.CENTER_HORIZONTAL);
                     noCities.setText("There are no cities to display");
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
                 url = CITY_DETAILS_URL + countryName.getText().toString().trim() + "/search" + API_KEY + "&q=" + cityName.getText().toString().trim();
                 Log.d("City", url.trim());
                 new LoadCityDetails(MainActivity.this, MainActivity.this).execute(url.trim());
-                Intent i = new Intent(MainActivity.this,CityWeatherActivity.class);
+                Intent i = new Intent(MainActivity.this, CityWeatherActivity.class);
                 i.putExtra("country_code","US");
                 i.putExtra("city","Charlotte");
                 startActivity(i);
@@ -185,11 +185,10 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
             Log.d("In weather completion", ICON_URL);
         } else {
             SharedPreferences.Editor editor = mSettings.edit();
-            editor.putString("cur_city",city.getCityName());
-            editor.putString("cur_country",city.getCityCountry());
-            editor.putString("cur_cityKey",city.getCityKey());
-            editor.putString("unit","C");
-            editor.putString("counter",String.valueOf(counter));
+            editor.putString("cur_city", city.getCityName());
+            editor.putString("cur_country", city.getCityCountry());
+            editor.putString("cur_cityKey", city.getCityKey());
+            editor.putString("unit", "C");
             editor.commit();
             submitCity(city);
         }
@@ -198,30 +197,31 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     @Override
     public void getSelectedCity(City city) {
         if(search != true) {
-            setCurrentCity.setVisibility(View.GONE);
-        }
+                setCurrentCity.setVisibility(View.GONE);
+            }
             String url = null;
             url = CITY_WEATHER_DETAILS + city.getCityKey() + API_KEY;
             Log.d("In weather1 completion", CITY_WEATHER_DETAILS);
             new LoadWeatherDetails(this, this, city).execute(url.trim());
+
     }
 
     public ArrayList<City> submitCity(final City city) {
         cityRef = ref.push();
         String s = cityRef.toString();
-        city.setCityId(s);
         city.setCityFav("notFavourite");
+        city.setCityId(s);
         cityRef.setValue(city);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Count " ,""+dataSnapshot.getChildrenCount());
-                cities=null;
-                cities=new ArrayList<City>();
-                counter= (int) dataSnapshot.getChildrenCount();
-                for(DataSnapshot dataSnapshotChild: dataSnapshot.getChildren()){
-                    City cityChild=dataSnapshotChild.getValue(City.class);
-                    Log.d("City",counter+city.getCityName());
+                Log.d("Count ", "" + dataSnapshot.getChildrenCount());
+                cities = null;
+                cities = new ArrayList<City>();
+                counter = (int) dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                    City cityChild = dataSnapshotChild.getValue(City.class);
+                    Log.d("City", counter + city.getCityName());
                     cities.add(cityChild);
                 }
             }
@@ -235,31 +235,31 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
     }
 
     @Override
-    protected void onStart() {
+     protected void onStart() {
         super.onStart();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                cities = new ArrayList<>();
-                counter = (int) dataSnapshot.getChildrenCount();
-                for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
-                    City city = dataSnapshotChild.getValue(City.class);
-                    Log.d("CityObj", city.toString());
-                    cities.add(city);
-                }
-                Log.d("couny", "" + counter);
-                if (counter != 0) {
-                    noCities.setText("");
-                    searchAndSave.setText("");
-                    adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setAdapter(adaptor);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                } else {
-                    noCities.setGravity(Gravity.CENTER_HORIZONTAL);
-                    searchAndSave.setGravity(Gravity.CENTER_HORIZONTAL);
-                    noCities.setText("There are no cities to display");
-                    searchAndSave.setText("Search the city from the search box and save");
+                        cities = new ArrayList<>();
+                        counter = (int) dataSnapshot.getChildrenCount();
+                        for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                                City city = dataSnapshotChild.getValue(City.class);
+                                Log.d("CityObj", city.toString());
+                                cities.add(city);
+                            }
+                        Log.d("couny", "" + counter);
+                        if (counter != 0) {
+                                noCities.setText("");
+                                searchAndSave.setText("");
+                                adaptor = new CityAdapter(MainActivity.this, cities, MainActivity.this);
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setAdapter(adaptor);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                            } else {
+                                noCities.setGravity(Gravity.CENTER_HORIZONTAL);
+                                searchAndSave.setGravity(Gravity.CENTER_HORIZONTAL);
+                                noCities.setText("There are no cities to display");
+                                searchAndSave.setText("Search the city from the search box and save");
                 }
             }
 
@@ -272,13 +272,13 @@ public class MainActivity extends AppCompatActivity implements LoadCityDetails.L
 
     @Override
     public void passFavouriteClickData(City city) {
-        if(city.getCityFav().equals("Favourite")){
+        if (city.getCityFav().equals("Favourite")) {
             city.setCityFav("notFavourite");
-        }else {
-            city.setCityFav("Favourite");
+            }else {
+                city.setCityFav("Favourite");
         }
         Map<String, Object> map=new HashMap<>();
         map.put(city.getCityId(),city);
         ref.updateChildren(map);
-    }
+        }
 }
